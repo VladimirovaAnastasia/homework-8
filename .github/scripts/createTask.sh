@@ -3,9 +3,10 @@
 comment=$1
 
 current_tag=$(git tag | tail -1 | head -n1)
+tag="vladimirova$current_tag"
 
 taskURL=$(curl  \
--d '{"filter": { "unique": "'"${current_tag}"'"}}' \
+-d '{"filter": { "unique": "'"${tag}"'"}}' \
 -H "Content-Type: application/json"  \
 -H "Authorization: OAuth ${OAuth}" \
 -H "X-Org-ID: ${OrgId}" \
