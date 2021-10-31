@@ -1,0 +1,38 @@
+name: Main script
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: 'install'
+        run: npm ci
+
+      - name: Create release
+        run: sh ./.github/scripts/release.sh
+        env:
+          OAuth: ${{ secrets.YANDEX_TRACKER_OATH_TOKEN }}
+          OrgId: ${{ secrets.YANDEX_TRACKER_APP_ORG_ID }}
+
+      - name: Run tests
+        run: sh ./.github/scripts/tests.sh
+        env:
+          OAuth: ${{ secrets.YANDEX_TRACKER_OATH_TOKEN }}
+          OrgId: ${{ secrets.YANDEX_TRACKER_APP_ORG_ID }}
+
+      - name: Docker
+        run: sh ./.github/scripts/docker.sh
+        env:
+          OAuth: ${{ secrets.YANDEX_TRACKER_OATH_TOKEN }}
+          OrgId: ${{ secrets.YANDEX_TRACKER_APP_ORG_ID }}
